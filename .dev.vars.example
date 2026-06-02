@@ -1,0 +1,23 @@
+# .dev.vars.example — secret definitions for the Deploy to Cloudflare button
+#
+# The Deploy to Cloudflare button reads THIS file (not .dev.vars) to display
+# a secret-input form to the user during deployment setup.
+# Docs: https://developers.cloudflare.com/workers/platform/deploy-buttons/
+#
+# ── Format ────────────────────────────────────────────────────────────────────
+# KEY=default_or_placeholder_value  # optional inline comment shown in the UI
+#
+# ── How to use locally ────────────────────────────────────────────────────────
+# Copy this file to .dev.vars and fill in real values:
+#   cp .dev.vars.example .dev.vars
+# .dev.vars is gitignored and is loaded automatically by `wrangler dev`.
+#
+# ── How to set in production (manual deploy) ──────────────────────────────────
+#   npx wrangler secret put <KEY>
+#
+# ── Secrets for this Worker ───────────────────────────────────────────────────
+# Uncomment and set a value if you want to require callers to pass a shared
+# token in the X-Proxy-Token request header (simple bearer-style auth).
+# Leave commented out if you rely solely on the ALLOWED_ORIGINS allowlist.
+#
+# PROXY_AUTH_TOKEN=replace-with-a-strong-random-value

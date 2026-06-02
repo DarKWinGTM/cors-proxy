@@ -1,0 +1,44 @@
+# Wrangler configuration for cors-proxy
+# Docs: https://developers.cloudflare.com/workers/wrangler/configuration/
+#
+# ⚠️  Deploy to Cloudflare button requirements:
+#   • account_id is intentionally absent — injected automatically by the deploy system.
+#   • No [env.*] staging blocks — the button deploys a single production instance.
+#   • Secrets are declared in .dev.vars.example, NOT here.
+#     The deploy UI reads that file to prompt the user for secret values.
+#
+# After deploying via the button, edit ALLOWED_ORIGINS and ALLOWED_TARGET_HOSTS
+# inside cors-proxy-worker.js to match your front-end and upstream API.
+
+# ── Identity ──────────────────────────────────────────────────────────────────
+name = "cors-proxy"
+main = "cors-proxy-worker.js"
+
+# ── Runtime ───────────────────────────────────────────────────────────────────
+# Docs: https://developers.cloudflare.com/workers/configuration/compatibility-dates/
+compatibility_date = "2026-03-21"
+
+# ── Routing ───────────────────────────────────────────────────────────────────
+# The deploy button always uses workers.dev for the initial deployment.
+workers_dev = true
+
+# ── Observability ─────────────────────────────────────────────────────────────
+[observability]
+enabled            = true
+head_sampling_rate = 1
+
+# ── Limits ────────────────────────────────────────────────────────────────────
+#[limits]
+#cpu_ms = 50
+
+# ── Source maps ───────────────────────────────────────────────────────────────
+upload_source_maps = true
+
+# ── Environment variables (non-secret) ────────────────────────────────────────
+[vars]
+ENVIRONMENT = "production"
+
+# ── Local development ─────────────────────────────────────────────────────────
+[dev]
+port           = 8787
+local_protocol = "http"

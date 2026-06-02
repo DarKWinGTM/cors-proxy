@@ -1,0 +1,9 @@
+# Dependencies
+node_modules/
+
+# Cloudflare Workers/Wrangler
+.wrangler/
+dist/
+build/
+.dev.vars
+.env

@@ -1,0 +1,67 @@
+{
+  // Wrangler configuration for cors-proxy
+  // Docs: https://developers.cloudflare.com/workers/wrangler/configuration/
+  //
+  // ⚠️  Deploy to Cloudflare button requirements:
+  //   • account_id is intentionally absent — the deploy system injects the
+  //     user's own account ID automatically.
+  //   • No env: {} staging block — the button deploys a single production instance.
+  //   • Secrets are declared in .dev.vars.example, NOT here.
+  //     The deploy UI reads that file to prompt the user for secret values.
+  //
+  // After deploying via the button, edit ALLOWED_ORIGINS and ALLOWED_TARGET_HOSTS
+  // inside cors-proxy-worker.js to match your front-end and upstream API.
+  "$schema": "./node_modules/wrangler/config-schema.json",
+
+  // ── Identity ──────────────────────────────────────────────────────────────
+  // Worker name shown in the Cloudflare dashboard.
+  // The deploy button UI lets the user rename this before deploying.
+  "name": "cors-proxy",
+
+  // Entry-point (ES Modules format, no build step required)
+  "main": "cors-proxy-worker.js",
+
+  // ── Runtime ───────────────────────────────────────────────────────────────
+  // Docs: https://developers.cloudflare.com/workers/configuration/compatibility-dates/
+  "compatibility_date": "2026-03-21",
+
+  // ── Routing ───────────────────────────────────────────────────────────────
+  // true → deployed to https://<worker-name>.<subdomain>.workers.dev
+  // The deploy button always uses workers.dev for the initial deployment.
+  "workers_dev": true,
+
+  // ── Observability ─────────────────────────────────────────────────────────
+  // Persist request logs in the Cloudflare dashboard.
+  // head_sampling_rate 1 = every request is logged (fine for most traffic).
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 1
+  },
+
+  // ── Limits ────────────────────────────────────────────────────────────────
+  // A transparent proxy should never need more than 50 ms CPU time.
+  // Only enforced on Cloudflare's network, not during local `wrangler dev`.
+  // Not allowed in free-tier accounts
+  // "limits": {
+  //   "cpu_ms": 50
+  // },
+
+  // ── Source maps ───────────────────────────────────────────────────────────
+  // Stack traces in the dashboard will show original source lines.
+  "upload_source_maps": true,
+
+  // ── Environment variables (non-secret, visible in dashboard) ──────────────
+  // Add any non-sensitive config your Worker needs here.
+  // For secrets use .dev.vars.example (read by the deploy button UI) and
+  // `wrangler secret put` for manual deployments.
+  "vars": {
+    "ENVIRONMENT": "production"
+  },
+
+  // ── Local development ─────────────────────────────────────────────────────
+  // Only affects `wrangler dev`; has no effect on deployed Workers.
+  "dev": {
+    "port": 8787,
+    "local_protocol": "http"
+  }
+}
